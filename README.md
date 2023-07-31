@@ -100,7 +100,7 @@ opt-level = 3
 
 The `llm` library is engineered to take advantage of hardware accelerators such as `cuda` and `metal` for optimized performance.
 
-To enable `llm` to harness these accelerators, some preliminary configuration steps are necessary, which vary based on your operating system. For comprehensive guidance, please refer to the [Acceleration Support for Building section](doc/CONTRIBUTING.md#acceleration-support-for-building) in our documentation.
+To enable `llm` to harness these accelerators, some preliminary configuration steps are necessary, which vary based on your operating system. For comprehensive guidance, please refer to [Acceleration Support](doc/acceleration-support.md) in our documentation.
 
 ## Using `llm` from Other Languages
 
@@ -192,8 +192,7 @@ of GGML models.
 
 ### r/LocalLLaMA
 
-This Reddit community maintains
-[a wiki](https://www.reddit.com/r/LocalLLaMA/wiki/index/) related to GGML
+This Reddit community maintains a wiki related to GGML
 models, including well organized lists of links for acquiring
 [GGML models](https://www.reddit.com/r/LocalLLaMA/wiki/models/) (mostly from
 Hugging Face 🤗).
