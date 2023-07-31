@@ -4,7 +4,7 @@
 use std::{error::Error, sync::Arc};
 
 use llm_base::{
-    ggml::{self},
+    ggml::{self, accelerator::Backend},
     model::{common, HyperparametersWriteError},
     util, FileType, GraphOutputs, InferenceSession, InferenceSessionConfig, KnownModel, LoadError,
     ModelParameters, OutputRequest, Regex, TensorLoader, TokenId, Tokenizer,
@@ -51,44 +51,46 @@ impl KnownModel for Llama {
         // model-global weights
         let wte = tl.load("tok_embeddings.weight")?;
 
-        let backend = params.backend(0);
+        // let backend = params.backend(0);
+        let backend20 = Backend::GpuSplit;
+        let backend10 = Backend::Gpu;
 
-        let norm = tl.load("norm.weight")?.transfer_to(backend);
-        let output = tl.load("output.weight")?.transfer_to(backend);
+        let norm = tl.load("norm.weight")?.transfer_to(backend10);
+        let output = tl.load("output.weight")?.transfer_to(backend20);
 
         let mut layers = Vec::new();
 
         for i in 0..hyperparameters.n_layer {
-            let backend = params.backend(i);
+            // let backend = params.backend(i);
 
             let layer = Layer {
                 attention_norm: tl
                     .load(&format!("layers.{i}.attention_norm.weight"))?
-                    .transfer_to(backend),
+                    .transfer_to(backend10),
                 wq: tl
                     .load(&format!("layers.{i}.attention.wq.weight"))?
-                    .transfer_to(backend),
+                    .transfer_to(backend20),
                 wk: tl
                     .load(&format!("layers.{i}.attention.wk.weight"))?
-                    .transfer_to(backend),
+                    .transfer_to(backend20),
                 wv: tl
                     .load(&format!("layers.{i}.attention.wv.weight"))?
-                    .transfer_to(backend),
+                    .transfer_to(backend20),
                 wo: tl
                     .load(&format!("layers.{i}.attention.wo.weight"))?
-                    .transfer_to(backend),
+                    .transfer_to(backend20),
                 ffn_norm: tl
                     .load(&format!("layers.{i}.ffn_norm.weight"))?
-                    .transfer_to(backend),
+                    .transfer_to(backend10),
                 w1: tl
                     .load(&format!("layers.{i}.feed_forward.w1.weight"))?
-                    .transfer_to(backend),
+                    .transfer_to(backend20),
                 w2: tl
                     .load(&format!("layers.{i}.feed_forward.w2.weight"))?
-                    .transfer_to(backend),
+                    .transfer_to(backend20),
                 w3: tl
                     .load(&format!("layers.{i}.feed_forward.w3.weight"))?
-                    .transfer_to(backend),
+                    .transfer_to(backend20),
             };
             layers.push(layer);
         }

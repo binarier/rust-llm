@@ -71,8 +71,8 @@ pub fn initialize(device: i32) {
         //TODO: Make this configurable
         sys::cuda::ggml_init_cublas();
         sys::cuda::ggml_cuda_set_main_device(device);
-        let split = 1.0f32;
-        sys::cuda::ggml_cuda_set_tensor_split(&split as *const f32);
+        // let split = 1.0f32;
+        // sys::cuda::ggml_cuda_set_tensor_split(&split as *const f32);
     }
 }
 
